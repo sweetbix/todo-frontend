@@ -12,7 +12,7 @@ function Clear({ onClear} ) {
     };
 
     return (
-        <button className="w-full bg-red-700 rounded-md my-5 py-2 text-xl text-white hover:bg-red-900"
+        <button className="w-full bg-red-600 rounded-md my-5 py-2 text-xl text-white hover:bg-red-700"
         type="submit"
         onClick={handleClear}>
             Clear

@@ -34,13 +34,35 @@ function App() {
     setTodos([]);
   }
 
+  const markTodo = async (id) => {
+    await fetch(`api/todos/${id}`, {
+      method: "PUT"
+    });
+
+    setTodos(prev => 
+      prev.map(todo => 
+        todo._id === id ? {...todo, completed: true} : todo
+      )
+    );
+  }
+
+  const deleteTodo = async (id) => {
+    await fetch(`api/todos/${id}`, {
+      method: "DELETE"
+    });
+
+    setTodos(prev => 
+      prev.filter(todo => todo._id !== id)
+    );
+  }
+
 
 
 
   return (
     <div className="max-w-md mx-auto">
       <h1 className="text-5xl font-bold text-center text-slate-800">Todo App</h1>
-        <TodoList todos={todos}/>
+        <TodoList todos={todos} onMark={markTodo} onDel={deleteTodo}/>
 
         <AddTodoForm onAdd={addTodo} />
 
