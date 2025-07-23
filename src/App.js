@@ -1,7 +1,7 @@
 import AddTodoForm from "./components/AddTodoForm.js";
 import TodoList from "./components/TodoList.js";
 import Clear from "./components/Clear.js";
-import React, { useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 
 
 function App() {
@@ -36,7 +36,11 @@ function App() {
 
   const markTodo = async (id) => {
     await fetch(`api/todos/${id}`, {
-      method: "PUT"
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }, 
+      body: JSON.stringify({ completed: true}),
     });
 
     setTodos(prev => 
@@ -56,13 +60,28 @@ function App() {
     );
   }
 
+  const updateTodo = async (id, newText) => {
+    await fetch(`api/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text : newText}),
+    });
+
+    setTodos((prev) => 
+      prev.map((todo) => 
+        todo._id === id ? {...todo, text: newText} : todo  
+      )
+    );
+  };
+
 
 
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-5xl font-bold text-center text-slate-800">Todo App</h1>
-        <TodoList todos={todos} onMark={markTodo} onDel={deleteTodo}/>
+    <div className="flex flex-col min-h-screen bg-blue-300 px-[35%] justify-center">
+        <TodoList todos={todos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo}/>
 
         <AddTodoForm onAdd={addTodo} />
 
