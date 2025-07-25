@@ -1,8 +1,10 @@
-# **To do list (MERN + TailwindCSS) **
+# **To do list (MERN + TailwindCSS)**
 
 A simple and interactive Todo List web application built with React (frontend), Express + MongoDB (backend), and Tailwind CSS for styling.
 The app allows users to add, edit, mark as completed, and delete tasks, with real-time updates to the UI.
 
+## **Backend**
+### https://github.com/sweetbix/todo-app
 
 ## **Tech Stack**
 
