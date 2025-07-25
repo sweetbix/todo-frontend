@@ -78,13 +78,10 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
     )
     
     return (
-        <div className="">
-            <h2 className="text-3xl font-bold mb-4 text-black">My To Do List</h2>
             <ul className="p-4">
                 {renderTodos(uncompleted)}
                 {renderTodos(completed)}
             </ul>
-        </div>
     );
 }
 

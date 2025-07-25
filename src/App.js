@@ -1,11 +1,13 @@
 import AddTodoForm from "./components/AddTodoForm.js";
 import TodoList from "./components/TodoList.js";
 import Clear from "./components/Clear.js";
-import { useEffect, useState} from "react";
+import FilterBar from "./components/FilterBar.js";
+import { useEffect, useState, useMemo} from "react";
 
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     fetch("/api/todos")
@@ -76,13 +78,27 @@ function App() {
     );
   };
 
-
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case 'active': 
+        return todos.filter(t => !t.completed);
+      case 'completed':
+        return todos.filter(t => t.completed);
+      default:
+        return todos
+    }
+  }, [todos, filter])
 
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-300 px-[35%] justify-center">
-        <TodoList todos={todos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo}/>
-
+        <div className="flex align-middle justify-between mb-4">
+          <h2 className="flex-1 text-3xl font-bold text-black">My To Do List</h2>
+          <FilterBar filter={filter} setFilter={setFilter} />
+        </div>
+        
+        <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo}/>
+        
         <AddTodoForm onAdd={addTodo} />
 
         <Clear onClear={clearTodos}/>
