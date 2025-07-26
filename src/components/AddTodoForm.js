@@ -21,7 +21,8 @@ function AddTodoForm({ onAdd }) {
             placeholder="Add a new task"
             />
             
-            <button className="bg-blue-500 px-4 py-1 rounded hover:bg-blue-600 text-white"
+            <button className="bg-blue-500 px-4 py-1 rounded hover:bg-blue-600 text-white
+            transition-colors duration-200"
             type="submit">Add</button>
         </form>
     )

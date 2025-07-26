@@ -91,17 +91,19 @@ function App() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-blue-300 px-[35%] justify-center">
-        <div className="flex align-middle justify-between mb-4">
+    <div className="flex flex-col min-h-screen bg-blue-300 px-[5%] sm:px-[10%] md:px-[20%] lg:px-[30%] justify-center">
+        <div className="flex align-middle justify-between mb-4 sticky top-0 py-2 bg-blue-300">
           <h2 className="flex-1 text-3xl font-bold text-black">My To Do List</h2>
           <FilterBar filter={filter} setFilter={setFilter} />
         </div>
         
         <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo}/>
         
-        <AddTodoForm onAdd={addTodo} />
+        <div className="bg-blue-300 sticky bottom-0">
+          <AddTodoForm onAdd={addTodo} />
 
-        <Clear onClear={clearTodos}/>
+          <Clear onClear={clearTodos}/>
+        </div>
     </div>
   );
 }
