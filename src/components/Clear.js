@@ -1,21 +1,9 @@
-function Clear({ onClear} ) {
-    const handleClear = async () => {
-        try {
-            await fetch("http://localhost:3001/api/todos", {
-                method: "DELETE"
-            });
-
-            if (onClear) onClear();
-        } catch (err) {
-            console.error("Failed to clear tasks", err);
-        }
-    };
-
+function Clear({ onClear } ) {
     return (
-        <button className="w-full bg-red-600 rounded-md my-5 py-1 text-xl text-white hover:bg-red-700
+        <button className="w-full bg-red-600 rounded-xl my-5 py-1 text-xl text-white hover:bg-red-700
         transition-colors duration-200"
         type="submit"
-        onClick={handleClear}>
+        onClick={onClear}>
             Clear
         </button>
     );

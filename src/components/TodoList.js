@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { isLoggedIn } from "../utils/auth";
 
 function TodoList({ todos, onMark, onUpdate, onDel}) {
     function handleKeyDown(e, todo) {
         if (e.key === "Enter") {
-            handleUpdate(todo._id);
+            handleUpdate(getTodoId(todo));
         }
     }
 
@@ -14,7 +15,7 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
 
     const startEditing = (todo) => {
         setEditText(todo.text);
-        setEditingId(todo._id);
+        setEditingId(getTodoId(todo));
     };
 
     const handleUpdate = (id) => {
@@ -22,10 +23,12 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
         setEditingId(null); // exit edit mode
     };
     
+    const getTodoId = (todo) => isLoggedIn() ? todo._id : todo.id;
+
     const renderTodos = (list) => (
         list.map((todo) => (
-            <li key={todo._id} className="flex items-center mb-2 border-2 p-2 pt-1 pb-1 rounded-md border-black">
-                {editingId === todo._id ? (
+            <li key={getTodoId(todo)} className="flex items-center mb-2 border-2 p-2 pt-1 pb-1 rounded-md border-black">
+                {editingId === getTodoId(todo) ? (
                     <input
                         value = {editText}
                         onChange = {(e) => setEditText(e.target.value)}
@@ -42,7 +45,7 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
                     </p>
                 )}
                 <div className="flex shrink-0">
-                    <button onClick={() => onMark(todo._id)}
+                    <button onClick={() => onMark(getTodoId(todo))}
                     className="px-2 rounded-lg bg-green-500 hover:bg-green-600 mr-1
                     transition-colors duration-200">
                         <svg width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,8 +53,8 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
                         </svg>
                     </button>
 
-                    {editingId === todo._id ? (
-                        <button onClick={() => handleUpdate(todo._id)}
+                    { editingId === getTodoId(todo) ? (
+                        <button onClick={() => handleUpdate(getTodoId(todo))}
                         className="py-1 px-2 rounded-lg bg-orange-500 hover:bg-orange-600 mr-1
                         transition-colors duration-200">
                                 <xml version="1.0" encoding="utf-8"/>
@@ -68,7 +71,7 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
                         </button>
                     )}
 
-                    <button onClick={() => onDel(todo._id)} 
+                    <button onClick={() => onDel(getTodoId(todo))} 
                     className="py-1 px-2 rounded-lg bg-red-500 hover:bg-red-600">
                         <svg width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.0004 9.5L17.0004 14.5M17.0004 9.5L12.0004 14.5M4.50823 13.9546L7.43966 17.7546C7.79218 18.2115 7.96843 18.44 8.18975 18.6047C8.38579 18.7505 8.6069 18.8592 8.84212 18.9253C9.10766 19 9.39623 19 9.97336 19H17.8004C18.9205 19 19.4806 19 19.9084 18.782C20.2847 18.5903 20.5907 18.2843 20.7824 17.908C21.0004 17.4802 21.0004 16.9201 21.0004 15.8V8.2C21.0004 7.0799 21.0004 6.51984 20.7824 6.09202C20.5907 5.71569 20.2847 5.40973 19.9084 5.21799C19.4806 5 18.9205 5 17.8004 5H9.97336C9.39623 5 9.10766 5 8.84212 5.07467C8.6069 5.14081 8.38579 5.2495 8.18975 5.39534C7.96843 5.55998 7.79218 5.78846 7.43966 6.24543L4.50823 10.0454C3.96863 10.7449 3.69883 11.0947 3.59505 11.4804C3.50347 11.8207 3.50347 12.1793 3.59505 12.5196C3.69883 12.9053 3.96863 13.2551 4.50823 13.9546Z" stroke="#000000"/>

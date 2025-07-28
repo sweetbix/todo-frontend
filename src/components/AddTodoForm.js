@@ -15,13 +15,13 @@ function AddTodoForm({ onAdd }) {
     return (
         <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
             <input
-            className="border border-gray-500 px-2 py-1 rounded w-full"
+            className="border border-gray-500 px-2 py-1 rounded-lg w-full"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Add a new task"
             />
             
-            <button className="bg-blue-500 px-4 py-1 rounded hover:bg-blue-600 text-white
+            <button className="bg-blue-500 px-4 py-1 rounded-lg hover:bg-blue-600 text-white
             transition-colors duration-200"
             type="submit">Add</button>
         </form>
