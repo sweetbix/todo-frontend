@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
+function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -13,14 +13,14 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
             }
         };
         
-        if (showRegister) {
+        if (showLogin) {
             document.addEventListener("keydown", handleEsc);
         }
 
         return () => {
             document.removeEventListener("keydown", handleEsc);
         }
-    }, [showRegister, onClose]);
+    }, [showLogin, onClose]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,8 +31,6 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
         }
         
         try {
-            await axios.post("api/auth/register", { username, password });
-            alert("Registered successfully!");
             const res = await axios.post("api/auth/login", { username, password });
             alert("Logged in successfully!");
             const token = res.data.token;
@@ -41,7 +39,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
             onClose();
         } catch (err) {
             console.log(err);
-            alert("Failed to create user");
+            alert("Failed to log in");
         }
     };
 
@@ -54,7 +52,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
         className="flex justify-center items-center bg-black bg-opacity-20 z-10 fixed w-full min-h-screen">
             <div className="flex flex-col bg-slate-300 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] h-[50vh] border-2 border-black rounded-2xl
             relative z-5">
-                <h1 className="text-2xl text-center py-4">Create an account</h1>
+                <h1 className="text-2xl text-center py-4">Login to your account</h1>
 
                 <button onClick={onClose} className="absolute top-2 right-2 z-10 text-lg
                 rounded-full"> 
@@ -104,7 +102,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
                     
 
                     <button type="submit" className="border-2 mx-auto border-black text-md
-                    rounded-3xl mt-5 p-1 w-full bg-blue-400 hover:bg-blue-500">Sign up
+                    rounded-3xl mt-5 p-1 w-full bg-blue-400 hover:bg-blue-500">Log in
                     </button>
                 </form>
             </div>

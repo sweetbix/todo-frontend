@@ -579,6 +579,14 @@ video {
   top: 1rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -715,6 +723,10 @@ video {
 
 .rounded-xl {
   border-radius: 0.75rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .border {
@@ -858,16 +870,12 @@ video {
   padding-right: 0.5rem;
 }
 
-.pr-8 {
-  padding-right: 2rem;
+.pr-9 {
+  padding-right: 2.25rem;
 }
 
 .pt-1 {
   padding-top: 0.25rem;
-}
-
-.pr-9 {
-  padding-right: 2.25rem;
 }
 
 .text-center {

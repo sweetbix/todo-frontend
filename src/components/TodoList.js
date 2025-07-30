@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { isLoggedIn } from "../utils/auth";
 
-function TodoList({ todos, onMark, onUpdate, onDel}) {
+function TodoList({ todos, onMark, onUpdate, onDel, isLoggedIn}) {
     function handleKeyDown(e, todo) {
         if (e.key === "Enter") {
             handleUpdate(getTodoId(todo));
@@ -22,8 +21,8 @@ function TodoList({ todos, onMark, onUpdate, onDel}) {
         onUpdate(id, editText);
         setEditingId(null); // exit edit mode
     };
-    
-    const getTodoId = (todo) => isLoggedIn() ? todo._id : todo.id;
+
+    const getTodoId = (todo) => isLoggedIn ? todo._id : todo.id;
 
     const renderTodos = (list) => (
         list.map((todo) => (

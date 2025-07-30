@@ -4,7 +4,7 @@ import Clear from "../components/Clear.js";
 import FilterBar from "../components/FilterBar.js";
 import UserControl from "../components/UserControl.js";
 import RegisterForm from "../components/RegisterForm.js";
-import { isLoggedIn } from "../utils/auth.js";
+import LoginForm from "../components/LoginForm.js";
 import { useEffect, useState, useMemo} from "react";
 import axios from "axios";
 
@@ -12,20 +12,32 @@ function Home() {
     const [todos, setTodos] = useState([]);
     const [filter, setFilter] = useState('all');
     const [showRegister, setShowRegister] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem("token"));
 
     useEffect(() => {
-        if (isLoggedIn()) {
-        // fetch from backend
-        axios.get("api/todos", {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}`},
-            }).then(res => setTodos(res.data));
+      const fetchTodos = async () => {
+        if (isLoggedIn) {
+          // fetch from backend
+          const res = await axios.get("api/todos", {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          })
+
+          setTodos(res.data);
+
+        } else {
+          setTodos([]);
         }
-    }, []);
+      }
+
+      
+      fetchTodos();
+    }, [isLoggedIn]);
 
     const addTodo = async (text) => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         const res = await axios.post("api/todos", { text }, {
-          headers: { Authorisation: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
         });
         setTodos(prev => [...prev, res.data]);
       } else {
@@ -35,9 +47,9 @@ function Home() {
     };
 
     const clearTodos = async () => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         await axios.delete("api/todos", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
         });
       }
 
@@ -45,14 +57,20 @@ function Home() {
     };
 
     const markTodo = async (id) => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         try {
           await axios.put(`api/todos/${id}`, {
             completed: true },
             { 
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+              headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
             },
           );
+          
+          setTodos((prev) => prev.map((todo) => 
+            todo._id === id ? { ...todo, completed: true} : todo
+            )
+          );
+
         } catch (err) {
           console.error("Failed to update todos:", err);
           return;
@@ -66,9 +84,9 @@ function Home() {
     };
 
     const deleteTodo = async (id) => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         await axios.delete(`api/todos/${id}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}`},
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}`},
         }); 
 
         setTodos((prev) => prev.filter((todo) => todo._id !== id));
@@ -78,9 +96,9 @@ function Home() {
     };
 
     const updateTodo = async (id, newText) => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         await axios.put(`api/todos/${id}`, {text: newText}, {
-          headers: {Authorization: `Bearer ${localStorage.getItem("token")}`
+          headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`
         }
         });
 
@@ -95,7 +113,6 @@ function Home() {
             todo.id === id ? {...todo, text: newText} : todo  
           )
         );
-        console.log("updated");
       }
     };
 
@@ -110,19 +127,27 @@ function Home() {
       }
     }, [todos, filter])
 
-    const onClose = () => {
+    const onCloseR = () => {
       setShowRegister(false)
+    }
+
+    const onCloseL = () => {
+      setShowLogin(false);
     }
 
 
     return (
         <div className="flex flex-col min-h-screen bg-blue-300 justify-center">
             <div className="flex fixed top-4 right-4">
-              <UserControl setShowRegister={setShowRegister}/>
+              <UserControl setShowRegister={setShowRegister} setShowLogin={setShowLogin} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
             </div>
 
             { showRegister && (
-              <RegisterForm showRegister={showRegister} onClose={onClose} />
+              <RegisterForm showRegister={showRegister} onClose={onCloseR} setIsLoggedIn={setIsLoggedIn} />
+            )}
+
+            { showLogin && (
+              <LoginForm showLogin={showLogin} onClose={onCloseL} setIsLoggedIn={setIsLoggedIn} />
             )}
 
             <div className="px-[5%] sm:px-[10%] md:px-[20%] lg:px-[30%]">
@@ -131,7 +156,7 @@ function Home() {
                 <FilterBar filter={filter} setFilter={setFilter} />
               </div>
 
-              <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo}/>
+              <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo} isLoggedIn={isLoggedIn}/>
 
               <div className="bg-blue-300 sticky bottom-0">
                 <AddTodoForm onAdd={addTodo} />
