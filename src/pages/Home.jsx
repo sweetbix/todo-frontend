@@ -5,7 +5,7 @@ import FilterBar from "../components/FilterBar.js";
 import UserControl from "../components/UserControl.js";
 import RegisterForm from "../components/RegisterForm.js";
 import LoginForm from "../components/LoginForm.js";
-import { useEffect, useState, useMemo} from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 
 function Home() {
@@ -127,6 +127,14 @@ function Home() {
       }
     }, [todos, filter])
 
+    function usernameDisplay() {
+      if (sessionStorage.getItem("username").endsWith("s")) {
+        return sessionStorage.getItem("username") + 's\'';
+      } else {
+        return sessionStorage.getItem("username") + '\'s';
+      }
+    }
+
     const onCloseR = () => {
       setShowRegister(false)
     }
@@ -151,14 +159,15 @@ function Home() {
             )}
 
             <div className="px-[5%] sm:px-[10%] md:px-[20%] lg:px-[30%]">
-              <div className="flex align-middle justify-between mb-4 sticky top-0 py-2 bg-blue-300">
-                <h2 className="flex-1 text-3xl font-bold text-black">My To Do List</h2>
+              <div className="flex align-middle justify-between mb-4 sticky top-0 py-3 bg-blue-300">
+                <h2 className="flex-1 text-3xl font-bold text-black"><span className="text-green-800">{usernameDisplay()}</span> To Do List</h2>
                 <FilterBar filter={filter} setFilter={setFilter} />
               </div>
 
-              <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo} isLoggedIn={isLoggedIn}/>
+              <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo} isLoggedIn={isLoggedIn} filter={filter} 
+              />
 
-              <div className="bg-blue-300 sticky bottom-0">
+              <div className="bg-blue-300 pt-1 sticky bottom-0">
                 <AddTodoForm onAdd={addTodo} />
 
                 <Clear onClear={clearTodos}/>

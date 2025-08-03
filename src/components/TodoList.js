@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function TodoList({ todos, onMark, onUpdate, onDel, isLoggedIn}) {
+function TodoList({ todos, onMark, onUpdate, onDel, isLoggedIn, filter }) {
     function handleKeyDown(e, todo) {
         if (e.key === "Enter") {
             handleUpdate(getTodoId(todo));
@@ -83,6 +83,11 @@ function TodoList({ todos, onMark, onUpdate, onDel, isLoggedIn}) {
     
     return (
             <ul className="p-4">
+                { 
+                    (todos.length === 0 && filter === "all") ? <p className="text-lg text-center">
+                        What's on the agenda <span className="text-green-900 font-bold">{sessionStorage.getItem("username") || "guest"}</span>? &#x1F60E;</p> : ""
+                }
+
                 {renderTodos(uncompleted)}
                 {renderTodos(completed)}
             </ul>

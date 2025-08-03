@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import nProgress from "nprogress";
 
 function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
     const [username, setUsername] = useState("");
@@ -31,17 +32,24 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
         }
         
         try {
+            nProgress.start();
             await axios.post("api/auth/register", { username, password });
+            nProgress.done();
             alert("Registered successfully!");
+            nProgress.start();
             const res = await axios.post("api/auth/login", { username, password });
+            nProgress.done();
             alert("Logged in successfully!");
             const token = res.data.token;
             sessionStorage.setItem("token", token);
+            sessionStorage.setItem("username", username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
             console.log(err);
             alert("Failed to create user");
+        } finally {
+            nProgress.done();
         }
     };
 
@@ -52,36 +60,36 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
             }
         }}
         className="flex justify-center items-center bg-black bg-opacity-20 z-10 fixed w-full min-h-screen">
-            <div className="flex flex-col bg-slate-300 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] h-[50vh] border-2 border-black rounded-2xl
+            <div className="flex flex-col bg-slate-300 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] border-2 border-black rounded-2xl
             relative z-5">
-                <h1 className="text-2xl text-center py-4">Create an account</h1>
+                <h1 className="text-2xl text-center pt-4">Create an account</h1>
 
-                <button onClick={onClose} className="absolute top-2 right-2 z-10 text-lg
+                <button onClick={onClose} className="absolute top-2 right-2 z-10
                 rounded-full"> 
                     
-                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="#1C274C"/>
-                    <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="#1C274C"/>
-                    </svg>
+                <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24"/>
+                <path d="M7 17L16.8995 7.10051" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 7.00001L16.8995 16.8995" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
 
                 </button>
 
                 <form className="flex flex-col gap-2 px-7 mt-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-1">
-                        <label className="text-lg">Username</label>
 
                         <input className="rounded-md border border-black p-1"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)
-                        }/>
+                        placeholder="Username"
+                        onChange={(e) => setUsername(e.target.value)}/>
 
                     </div>  
                     <div className="flex flex-col gap-1">    
-                        <label className="text-lg">Password</label>
                         
                         <div className="flex items-center relative">
                             <input className="flex-grow rounded-md p-1 pr-9 border border-black"
                             type={showPassword ? "text" : "password"}
+                            placeholder="Password"
                             onChange={(e) => setPassword(e.target.value)} />
 
                             <div className="z-10 absolute right-2 flex">
@@ -104,7 +112,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn }) {
                     
 
                     <button type="submit" className="border-2 mx-auto border-black text-md
-                    rounded-3xl mt-5 p-1 w-full bg-blue-400 hover:bg-blue-500">Sign up
+                    rounded-3xl mt-4 mb-7 p-1 w-full bg-blue-400 hover:bg-blue-500">Sign up
                     </button>
                 </form>
             </div>

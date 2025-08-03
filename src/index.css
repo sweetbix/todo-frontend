@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* nProgress overrides */
+#nprogress .bar {
+  background: #108c23 !important;
+  height: 4px; 
+}
+
+/* Optional spinner style */
+#nprogress .spinner-icon {
+  display: none;
+}

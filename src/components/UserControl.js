@@ -4,18 +4,19 @@ function UserControl({ setShowRegister, setShowLogin, isLoggedIn, setIsLoggedIn 
         {isLoggedIn ? 
             <button onClick={() => {
                 sessionStorage.removeItem("token");
+                sessionStorage.setItem("username", "guest");
                 setIsLoggedIn(false);
             }}
-            className="text-md border-2 p-1 border-black rounded-lg  bg-green-300
+            className="text-md border-2 p-1 px-2 border-black rounded-lg  bg-green-300
             hover:bg-green-400 transition-colors duration-200" >Log out</button>
         : (
         <>
-        <button onClick={() => setShowRegister(true)} className="text-md border-2 p-1 border-black rounded-lg bg-green-300
+        <button onClick={() => setShowRegister(true)} className="text-md border-2 p-1 px-2 border-black rounded-lg bg-green-300
         hover:bg-green-400 transition-colors duration-200">
             Register
         </button>
 
-        <button onClick={() => setShowLogin(true)} className="text-md border-2 p-1 border-black rounded-lg  bg-green-300
+        <button onClick={() => setShowLogin(true)} className="text-md border-2 p-1 px-2 border-black rounded-lg  bg-green-300
         hover:bg-green-400 transition-colors duration-200">
             Login
         </button>
