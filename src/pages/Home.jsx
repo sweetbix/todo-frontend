@@ -20,7 +20,7 @@ function Home() {
         if (isLoggedIn) {
           // fetch from backend
           const res = await axios.get("api/todos", {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+            withCredentials: true,
           })
 
           setTodos(res.data);
@@ -37,7 +37,7 @@ function Home() {
     const addTodo = async (text) => {
       if (isLoggedIn) {
         const res = await axios.post("api/todos", { text }, {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          withCredentials: true,
         });
         setTodos(prev => [...prev, res.data]);
       } else {
@@ -49,7 +49,7 @@ function Home() {
     const clearTodos = async () => {
       if (isLoggedIn) {
         await axios.delete("api/todos", {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          withCredentials: true,
         });
       }
 
@@ -62,7 +62,7 @@ function Home() {
           await axios.put(`api/todos/${id}`, {
             completed: true },
             { 
-              headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
+              withCredentials: true,
             },
           );
           
@@ -86,7 +86,7 @@ function Home() {
     const deleteTodo = async (id) => {
       if (isLoggedIn) {
         await axios.delete(`api/todos/${id}`, {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}`},
+          withCredentials: true,
         }); 
 
         setTodos((prev) => prev.filter((todo) => todo._id !== id));
@@ -98,8 +98,7 @@ function Home() {
     const updateTodo = async (id, newText) => {
       if (isLoggedIn) {
         await axios.put(`api/todos/${id}`, {text: newText}, {
-          headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`
-        }
+          withCredentials: true,
         });
 
         setTodos((prev) => 
@@ -127,11 +126,11 @@ function Home() {
       }
     }, [todos, filter])
 
-    function usernameDisplay() {
-      if (sessionStorage.getItem("username").endsWith("s")) {
-        return sessionStorage.getItem("username") + 's\'';
+    function usernameDisplay(username) {
+      if (username.endsWith("s")) {
+        return username + 's\'';
       } else {
-        return sessionStorage.getItem("username") + '\'s';
+        return username + '\'s';
       }
     }
 
@@ -160,7 +159,7 @@ function Home() {
 
             <div className="px-[5%] sm:px-[10%] md:px-[20%] lg:px-[30%]">
               <div className="flex align-middle justify-between mb-4 sticky top-0 py-3 bg-blue-300">
-                <h2 className="flex-1 text-3xl font-bold text-black"><span className="text-green-800">{usernameDisplay()}</span> To Do List</h2>
+                <h2 className="flex-1 text-3xl font-bold text-black"><span className="text-green-800">{usernameDisplay(sessionStorage.getItem("username") || "guest")}</span> To Do List</h2>
                 <FilterBar filter={filter} setFilter={setFilter} />
               </div>
 

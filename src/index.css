@@ -4,8 +4,7 @@
 
 /* nProgress overrides */
 #nprogress .bar {
-  background: #108c23 !important;
-  height: 4px; 
+  background: #2cf486 !important;
 }
 
 /* Optional spinner style */
