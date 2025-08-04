@@ -13,7 +13,26 @@ function Home() {
     const [filter, setFilter] = useState('all');
     const [showRegister, setShowRegister] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem("token"));
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+      const checkLogin = async () => {
+        try {
+          const res = await axios.get("api/auth/check", {
+            withCredentials: true,
+          })
+
+          setIsLoggedIn(true);
+          sessionStorage.setItem("username", res.data.username);
+        } catch {
+          setIsLoggedIn(false);
+          sessionStorage.removeItem("username");
+        }
+      }
+
+      checkLogin();
+    }, []);
+
 
     useEffect(() => {
       const fetchTodos = async () => {

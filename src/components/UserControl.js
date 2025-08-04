@@ -1,14 +1,29 @@
 import nProgress from "nprogress";
+import axios from "axios";
+
 
 function UserControl({ setShowRegister, setShowLogin, isLoggedIn, setIsLoggedIn }) {
+    const logout = async () => {
+        try {
+            await axios.post("api/auth/logout", {}, {
+                withCredentials: true,
+            });
+
+            sessionStorage.removeItem("username");
+            setIsLoggedIn(false);
+        } catch (err) {
+            console.log("Logout failed", err);
+        }
+    };
+    
+    
+    
     return (
     <div className="flex gap-3">
         {isLoggedIn ? 
             <button onClick={() => {
                 nProgress.start();
-                sessionStorage.removeItem("token");
-                sessionStorage.setItem("username", "guest");
-                setIsLoggedIn(false);
+                logout();
                 nProgress.done();
             }}
             className="text-md border-2 p-1 px-2 border-black rounded-lg  bg-green-300

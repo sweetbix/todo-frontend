@@ -54,7 +54,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
                 onClose();
             }
         }}
-        className="flex justify-center items-center bg-black bg-opacity-20 z-10 fixed w-full min-h-screen">
+        className="flex justify-center items-center bg-black bg-opacity-20 z-50 fixed inset-0">
             <div className="flex flex-col bg-slate-300 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] border-2 border-black rounded-2xl
             relative z-5">
                 <h1 className="text-2xl text-center pt-4">Sign in</h1>
