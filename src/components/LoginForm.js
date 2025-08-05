@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import nProgress from "nprogress";
-import "nprogress/nprogress.css";
 
-function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
+function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -33,18 +31,14 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
         }
         
         try {
-            nProgress.start();
+
             await axios.post("api/auth/login", { username, password });
-            nProgress.done();
-            alert("Logged in successfully!");
-            sessionStorage.setItem("username", username);
+
+            setUsernameGlobal(username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            console.log(err);
             alert("Failed to log in");
-        } finally {
-            nProgress.done();
         }
     };
 
@@ -54,26 +48,25 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
                 onClose();
             }
         }}
-        className="flex justify-center items-center bg-black bg-opacity-20 z-50 fixed inset-0">
-            <div className="flex flex-col bg-slate-300 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] border-2 border-black rounded-2xl
+        className="flex justify-center items-center bg-black bg-opacity-50 z-50 fixed inset-0">
+            <div className="flex flex-col bg-grey1 w-[60%] sm:w-[50%] md:w-[40%] lg:w-[25%] rounded-xl
             relative z-5">
-                <h1 className="text-2xl text-center pt-4">Sign in</h1>
+                <h1 className="text-2xl font-bold text-center pt-4 text-yellow-500">Sign in</h1>
 
-                <button onClick={onClose} className="absolute top-2 right-2 z-10
-                rounded-full"> 
+                <button onClick={onClose} className="absolute top-2 right-2 z-10 hover:bg-gray-600 rounded-md"> 
                     
                 <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="24" height="24"/>
-                <path d="M7 17L16.8995 7.10051" stroke="#000000" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M7 7.00001L16.8995 16.8995" stroke="#000000" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M7 17L16.8995 7.10051" stroke="#eab308" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M7 7.00001L16.8995 16.8995" stroke="#eab308" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
 
                 </button>
 
                 <form className="flex flex-col gap-2 px-7 mt-4" onSubmit={handleSubmit}>
+                    
                     <div className="flex flex-col gap-1">
-
-                        <input className="rounded-md border border-black p-1"
+                        <input className="rounded-md border-2 border-black p-1"
                         value={username}
                         placeholder="Username"
                         onChange={(e) => setUsername(e.target.value)
@@ -83,7 +76,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
                     <div className="flex flex-col gap-1">    
                         
                         <div className="flex items-center relative">
-                            <input className="flex-grow rounded-md p-1 pr-9 border border-black"
+                            <input className="flex-grow rounded-md p-1 pr-9 border-2 border-black"
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             onChange={(e) => setPassword(e.target.value)} />
@@ -108,7 +101,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn }) {
                     
 
                     <button type="submit" className="border-2 mx-auto border-black text-md
-                    rounded-3xl mt-4 mb-7 p-1 w-full bg-blue-400 hover:bg-blue-500">Log in
+                    rounded-3xl mt-4 mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400">Log in
                     </button>
                 </form>
             </div>
