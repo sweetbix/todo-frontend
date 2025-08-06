@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import axios from "axios";
 
 function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
 
     useEffect(() => {
         const handleEsc = (event) => {
@@ -25,11 +26,6 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!username.trim() || !password.trim()) {
-            alert("Missing field(s)");
-            return;
-        }
-        
         try {
             await axios.post("api/auth/register", { username, password });
 
@@ -39,8 +35,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            console.log(err);
-            alert("Failed to create user");
+            setErrorMsg(err.response.data.message);
         } 
     };
 
@@ -71,7 +66,10 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                         <input className="rounded-md border-2 border-black p-1"
                         value={username}
                         placeholder="Username"
-                        onChange={(e) => setUsername(e.target.value)}/>
+                        onChange={(e) => {
+                            setUsername(e.target.value);
+                            setErrorMsg(null);
+                        }}/>
 
                     </div>  
                     <div className="flex flex-col gap-1">    
@@ -80,7 +78,10 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                             <input className="flex-grow rounded-md p-1 pr-9 border-2 border-black"
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)} />
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrorMsg(null);
+                            }} />
 
                             <div className="z-10 absolute right-2 flex">
                                 <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -101,8 +102,13 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                     </div>
                     
 
-                    <button type="submit" className="border-2 mx-auto border-black text-md
-                    rounded-3xl mt-4 mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400">Sign up
+                    <div className="h-5">
+                        <p className={`text-xs text-center text-red-600`}>{errorMsg}</p>
+                    </div>  
+                    
+                    <button type="submit" disabled={errorMsg !== null} className="border-2 mx-auto border-black text-md
+                    rounded-3xl mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50
+                    disabled:cursor-not-allowed">Sign up
                     </button>
                 </form>
             </div>

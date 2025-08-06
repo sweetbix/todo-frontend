@@ -18,7 +18,10 @@ function Home() {
     const [checkingLogin, setCheckingLogin] = useState(true);
     const [loadingTodos, setLoadingTodos] = useState(true);
     const [username, setUsername] = useState("guest");
+    const [active, setActive] = useState(0);
+    const [completed, setCompleted] = useState(0);
 
+    // check if user is logged in
     useEffect(() => {
       
       const checkLogin = async () => {
@@ -41,7 +44,7 @@ function Home() {
       
     }, []);
 
-
+    // initialise todos and count
     useEffect(() => {
       if (checkingLogin) return;
 
@@ -53,7 +56,12 @@ function Home() {
             withCredentials: true,
           })
 
-          setTodos(res.data);
+          const resTodos = res.data;
+
+          setTodos(resTodos);
+          
+          setActive(resTodos.filter(todo => !todo.completed).length);
+          setCompleted(resTodos.filter(todo => todo.completed).length);
 
         } else {
           nProgress.start();
@@ -79,6 +87,8 @@ function Home() {
         setTodos(prev => [...prev, newTodo]);
         nProgress.done();
       }
+
+      setActive(prev => prev + 1);
     };
 
     const clearTodos = async () => {
@@ -90,13 +100,19 @@ function Home() {
       }
 
       setTodos([]);
+      setActive(0);
+      setCompleted(0);
 
     };
 
-    const markTodo = async (id) => {
+    const markTodo = async (markTodo) => {
+      if (markTodo.completed) {
+        return;
+      }
+
       if (isLoggedIn) {
         try {
-          await axios.put(`api/todos/${id}`, {
+          await axios.put(`api/todos/${markTodo._id}`, {
             completed: true },
             { 
               withCredentials: true,
@@ -104,7 +120,7 @@ function Home() {
           );
           
           setTodos((prev) => prev.map((todo) => 
-            todo._id === id ? { ...todo, completed: true} : todo
+            todo === markTodo ? { ...todo, completed: true} : todo
             )
           );
 
@@ -114,24 +130,36 @@ function Home() {
       } else {
         nProgress.start();
         setTodos((prev) => prev.map((todo) => 
-        todo.id === id ? { ...todo, completed: true} : todo
+        todo === markTodo ? { ...todo, completed: true} : todo
         ));
         nProgress.done();
       }
+
+      setActive(prev => prev - 1);
+      setCompleted(prev => prev + 1);
     };
 
-    const deleteTodo = async (id) => {
+    const deleteTodo = async (delTodo) => {
+
+      console.log(delTodo);
       if (isLoggedIn) {
-        await axios.delete(`api/todos/${id}`, {
+        await axios.delete(`api/todos/${delTodo._id}`, {
           withCredentials: true,
         }); 
-
-        setTodos((prev) => prev.filter((todo) => todo._id !== id));
+        setTodos((prev) => prev.filter((todo) => todo !== delTodo));
       } else {
         nProgress.start();
-        setTodos((prev) => prev.filter((todo) => todo.id !== id));
+        setTodos((prev) => prev.filter((todo) => todo !== delTodo));
         nProgress.done();
       }
+
+      if (delTodo.completed) {
+        setCompleted(prev => prev - 1);
+      } else {
+        setActive(prev => prev - 1);
+      }
+
+
     };
 
     const updateTodo = async (id, newText) => {
@@ -207,7 +235,7 @@ function Home() {
             <div className="px-[5%] sm:px-[10%] md:px-[20%] lg:px-[30%]">
               <div className="flex align-middle justify-between mb-4 sticky top-0 py-3 bg-grey1">
                 <h2 className="flex-1 text-3xl font-bold text-yellow-500"><span className="text-beige1">{usernameDisplay(username)}</span> To Do List</h2>
-                <FilterBar filter={filter} setFilter={setFilter} />
+                <FilterBar filter={filter} setFilter={setFilter} active={active} completed={completed} />
               </div>
 
               <TodoList todos={filteredTodos} onMark={markTodo} onUpdate={updateTodo} onDel={deleteTodo} isLoggedIn={isLoggedIn} filter={filter} 

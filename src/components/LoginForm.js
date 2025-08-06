@@ -4,7 +4,9 @@ import axios from "axios";
 function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
+
 
     useEffect(() => {
         const handleEsc = (event) => {
@@ -23,12 +25,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
     }, [showLogin, onClose]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!username.trim() || !password.trim()) {
-            alert("Missing field(s)");
-            return;
-        }
+        e.preventDefault(); 
         
         try {
 
@@ -38,7 +35,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            alert("Failed to log in");
+            setErrorMsg(err.response.data.message);
         }
     };
 
@@ -69,7 +66,10 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
                         <input className="rounded-md border-2 border-black p-1"
                         value={username}
                         placeholder="Username"
-                        onChange={(e) => setUsername(e.target.value)
+                        onChange={(e) => {
+                            setUsername(e.target.value)
+                            setErrorMsg(null);
+                        }
                         }/>
 
                     </div>  
@@ -79,11 +79,14 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
                             <input className="flex-grow rounded-md p-1 pr-9 border-2 border-black"
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)} />
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrorMsg(null);
+                            }}
+                            />
 
                             <div className="z-10 absolute right-2 flex">
-                                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                                    className="">
+                                <button type="button" onClick={() => setShowPassword(!showPassword)}>
                                     {showPassword ? 
                                         <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.5868 13.7788C5.36623 15.5478 8.46953 17.9999 12.0002 17.9999C15.5308 17.9999 18.6335 15.5478 20.413 13.7788C20.8823 13.3123 21.1177 13.0782 21.2671 12.6201C21.3738 12.2933 21.3738 11.7067 21.2671 11.3799C21.1177 10.9218 20.8823 10.6877 20.413 10.2211C18.6335 8.45208 15.5308 6 12.0002 6C8.46953 6 5.36623 8.45208 3.5868 10.2211C3.11714 10.688 2.88229 10.9216 2.7328 11.3799C2.62618 11.7067 2.62618 12.2933 2.7328 12.6201C2.88229 13.0784 3.11714 13.3119 3.5868 13.7788Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -98,10 +101,14 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
                             </div>
                         </div>
                     </div>
-                    
 
-                    <button type="submit" className="border-2 mx-auto border-black text-md
-                    rounded-3xl mt-4 mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400">Log in
+                    <div className="h-5">
+                        <p className={`text-xs text-center text-red-600`}>{errorMsg}</p>
+                    </div>  
+                    
+                    <button type="submit" disabled={errorMsg !== null} className="border-2 mx-auto border-black text-md
+                    rounded-3xl mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50
+                    disabled:cursor-not-allowed">Log in
                     </button>
                 </form>
             </div>
