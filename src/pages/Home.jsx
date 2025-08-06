@@ -20,13 +20,14 @@ function Home() {
     const [username, setUsername] = useState("guest");
     const [active, setActive] = useState(0);
     const [completed, setCompleted] = useState(0);
+    const backend = process.env.REACT_APP_API_URL;
 
     // check if user is logged in
     useEffect(() => {
       
       const checkLogin = async () => {
         try {
-          const res = await axios.get("api/auth/check", {
+          const res = await axios.get(`${backend}/api/auth/check`, {
             withCredentials: true,
           })
 
@@ -52,7 +53,7 @@ function Home() {
 
         if (isLoggedIn) {
           // fetch from backend
-          const res = await axios.get("api/todos", {
+          const res = await axios.get(`${backend}api/todos`, {
             withCredentials: true,
           })
 
@@ -77,7 +78,7 @@ function Home() {
 
     const addTodo = async (text) => {
       if (isLoggedIn) {
-        const res = await axios.post("api/todos", { text }, {
+        const res = await axios.post(`${backend}/api/todos`, { text }, {
           withCredentials: true,
         });
         setTodos(prev => [...prev, res.data]);
@@ -94,7 +95,7 @@ function Home() {
     const clearTodos = async () => {
 
       if (isLoggedIn) {
-        await axios.delete("api/todos", {
+        await axios.delete(`${backend}/api/todos`, {
           withCredentials: true,
         });
       }
@@ -112,7 +113,7 @@ function Home() {
 
       if (isLoggedIn) {
         try {
-          await axios.put(`api/todos/${markTodo._id}`, {
+          await axios.put(`${backend}/api/todos/${markTodo._id}`, {
             completed: true },
             { 
               withCredentials: true,
@@ -143,7 +144,7 @@ function Home() {
 
       console.log(delTodo);
       if (isLoggedIn) {
-        await axios.delete(`api/todos/${delTodo._id}`, {
+        await axios.delete(`${backend}/api/todos/${delTodo._id}`, {
           withCredentials: true,
         }); 
         setTodos((prev) => prev.filter((todo) => todo !== delTodo));
@@ -164,7 +165,7 @@ function Home() {
 
     const updateTodo = async (id, newText) => {
       if (isLoggedIn) {
-        await axios.put(`api/todos/${id}`, {text: newText}, {
+        await axios.put(`${backend}/api/todos/${id}`, {text: newText}, {
           withCredentials: true,
         });
 
