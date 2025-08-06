@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal }) {
@@ -6,6 +6,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const handleEsc = (event) => {
@@ -25,18 +26,20 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
+            setLoading(true);
             await axios.post("api/auth/register", { username, password });
 
             await axios.post("api/auth/login", { username, password });
-
+            
             setUsernameGlobal(username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
             setErrorMsg(err.response.data.message);
-        } 
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -63,7 +66,8 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                 <form className="flex flex-col gap-2 px-7 mt-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-1">
 
-                        <input className="rounded-md border-2 border-black p-1"
+                        <input className="rounded-md p-1 focus:ring-2 focus:outline-none focus:ring-yellow-500"
+                        type="text"
                         value={username}
                         placeholder="Username"
                         onChange={(e) => {
@@ -75,7 +79,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                     <div className="flex flex-col gap-1">    
                         
                         <div className="flex items-center relative">
-                            <input className="flex-grow rounded-md p-1 pr-9 border-2 border-black"
+                            <input className="flex-grow rounded-md p-1 focus:ring-2 focus:outline-none focus:ring-yellow-500 md:pr-9"
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             onChange={(e) => {
@@ -106,7 +110,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
                         <p className={`text-xs text-center text-red-600`}>{errorMsg}</p>
                     </div>  
                     
-                    <button type="submit" disabled={errorMsg !== null} className="border-2 mx-auto border-black text-md
+                    <button type="submit" disabled={errorMsg !== null || loading} className="mx-auto text-md
                     rounded-3xl mb-7 p-1 w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50
                     disabled:cursor-not-allowed">Sign up
                     </button>
