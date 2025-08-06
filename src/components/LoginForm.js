@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
+function LoginForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState(null);
@@ -120,4 +120,4 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
 
 }
 
-export default RegisterForm
+export default LoginForm

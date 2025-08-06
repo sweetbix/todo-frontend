@@ -6,7 +6,7 @@ function UserControl({ setShowRegister, setShowLogin, isLoggedIn, setIsLoggedIn,
     
     const logout = async () => {
         try {
-            await axios.post(`${backend}api/auth/logout`, {}, {
+            await axios.post(`${backend}/api/auth/logout`, {}, {
                 withCredentials: true,
             });
 
