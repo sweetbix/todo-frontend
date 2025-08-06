@@ -7,6 +7,7 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(false);
+    const backend = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const handleEsc = (event) => {
@@ -28,9 +29,9 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
         e.preventDefault();
         try {
             setLoading(true);
-            await axios.post("api/auth/register", { username, password });
+            await axios.post(`{backend}api/auth/register`, { username, password });
 
-            await axios.post("api/auth/login", { username, password });
+            await axios.post(`{backend}api/auth/login`, { username, password });
             
             setUsernameGlobal(username);
             setIsLoggedIn(true);

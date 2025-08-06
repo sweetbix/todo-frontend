@@ -2,9 +2,11 @@ import axios from "axios";
 
 
 function UserControl({ setShowRegister, setShowLogin, isLoggedIn, setIsLoggedIn, setUsername }) {
+    const backend = process.env.REACT_APP_API_URL;
+    
     const logout = async () => {
         try {
-            await axios.post("api/auth/logout", {}, {
+            await axios.post(`${backend}api/auth/logout`, {}, {
                 withCredentials: true,
             });
 
