@@ -53,7 +53,7 @@ function Home() {
 
         if (isLoggedIn) {
           // fetch from backend
-          const res = await axios.get(`${backend}api/todos`, {
+          const res = await axios.get(`${backend}/api/todos`, {
             withCredentials: true,
           })
 
