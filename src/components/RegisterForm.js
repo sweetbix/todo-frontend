@@ -29,9 +29,9 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
         e.preventDefault();
         try {
             setLoading(true);
-            await axios.post(`{backend}api/auth/register`, { username, password });
+            await axios.post(`${backend}/api/auth/register`, { username, password });
 
-            await axios.post(`{backend}api/auth/login`, { username, password });
+            await axios.post(`${backend}/api/auth/login`, { username, password });
             
             setUsernameGlobal(username);
             setIsLoggedIn(true);

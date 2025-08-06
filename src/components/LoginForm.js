@@ -30,7 +30,7 @@ function RegisterForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) 
         
         try {
             setLoading(true);
-            await axios.post(`${backend}api/auth/login`, { username, password });
+            await axios.post(`${backend}/api/auth/login`, { username, password });
 
             setUsernameGlobal(username);
             setIsLoggedIn(true);
