@@ -68,6 +68,8 @@ function Home() {
         } else {
           nProgress.start();
           setTodos([]);
+          setActive(0);
+          setCompleted(0);
           nProgress.done();
         }
 
