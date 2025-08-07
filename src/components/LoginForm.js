@@ -30,13 +30,19 @@ function LoginForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
         
         try {
             setLoading(true);
-            await axios.post(`${backend}/api/auth/login`, { username, password });
+            const response = await axios.post(`${backend}/api/auth/login`, { username, password }, {
+                withCredentials: true
+            });
+
+            console.log('Login response:', response);
+            console.log('Cookies after login:', document.cookie);
 
             setUsernameGlobal(username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            setErrorMsg(err.response.data.message);
+            console.error('Login error:', err);
+            setErrorMsg(err.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
         }
