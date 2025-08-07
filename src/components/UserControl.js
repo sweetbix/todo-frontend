@@ -13,7 +13,7 @@ function UserControl({ setShowRegister, setShowLogin, isLoggedIn, setIsLoggedIn,
             setUsername("guest");
             setIsLoggedIn(false);
         } catch (err) {
-            console.log("Logout failed", err);
+            alert("Failed to logout. Try again");
         }
     };
     

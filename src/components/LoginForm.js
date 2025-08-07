@@ -30,15 +30,14 @@ function LoginForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
         
         try {
             setLoading(true);
-            const response = await axios.post(`${backend}/api/auth/login`, { username, password }, {
+            await axios.post(`${backend}/api/auth/login`, { username, password }, {
                 withCredentials: true
             });
 
-            setUsernameGlobal(response.data.username);
+            setUsernameGlobal(username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            console.error('Login error:', err);
             setErrorMsg(err.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
