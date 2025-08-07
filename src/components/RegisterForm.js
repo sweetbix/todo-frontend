@@ -27,17 +27,22 @@ function RegisterForm({ showRegister, onClose, setIsLoggedIn, setUsernameGlobal 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
             setLoading(true);
-            await axios.post(`${backend}/api/auth/register`, { username, password });
+            await axios.post(`${backend}/api/auth/register`, { username, password }, {
+                withCredentials: true,
+            });
 
-            await axios.post(`${backend}/api/auth/login`, { username, password });
+            const response = await axios.post(`${backend}/api/auth/login`, { username, password }, {
+                withCredentials: true,
+            });
             
-            setUsernameGlobal(username);
+            setUsernameGlobal(response.data.username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
-            setErrorMsg(err.response.data.message);
+            setErrorMsg(err.response?.data?.message || "Failed to register");
         } finally {
             setLoading(false);
         }

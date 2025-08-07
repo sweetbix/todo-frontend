@@ -27,18 +27,14 @@ function Home() {
       
       const checkLogin = async () => {
         try {
-          console.log('Checking login...');
-          console.log('Cookies before check:', document.cookie);
           
           const res = await axios.get(`${backend}/api/auth/check`, {
             withCredentials: true,
           })
 
-          console.log('Check response:', res.data);
           setIsLoggedIn(true);
           setUsername(res.data.username);
         } catch (err) {
-          console.error('Check login error:', err);
           setIsLoggedIn(false);
           setUsername("guest");
         } finally {
@@ -147,7 +143,6 @@ function Home() {
 
     const deleteTodo = async (delTodo) => {
 
-      console.log(delTodo);
       if (isLoggedIn) {
         await axios.delete(`${backend}/api/todos/${delTodo._id}`, {
           withCredentials: true,

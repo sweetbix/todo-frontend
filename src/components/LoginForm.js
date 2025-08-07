@@ -34,10 +34,7 @@ function LoginForm({ showLogin, onClose, setIsLoggedIn, setUsernameGlobal }) {
                 withCredentials: true
             });
 
-            console.log('Login response:', response);
-            console.log('Cookies after login:', document.cookie);
-
-            setUsernameGlobal(username);
+            setUsernameGlobal(response.data.username);
             setIsLoggedIn(true);
             onClose();
         } catch (err) {
